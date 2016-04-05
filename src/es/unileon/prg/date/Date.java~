@@ -32,37 +32,21 @@ public class Date{
 	}
 	
 	boolean isSameYear(date other){
-		if(this.year == other.getYear()){
-			return true;
-		}
-		else{
-			return false;
-		}
+		return(this.year == other.getYear());
 	}
 
 	boolean isSameMonth(date other){
-		if(this.month == other.getMonth()){
-			return true;
-		}
-		else{
-			return false;
-		}
+		return(this.month == other.getMonth());
 	}
 
 	boolean isSameDay(date other){
-		if(this.day == other.getDay()){
-			return true;
-		}
-		else{
-			return false;
-		}
+		return(this.day == other.getDay());
 	}
+
 	boolean isSame(date other){
-		if((this.year == other.getYear()) && (this.month == other.getMonth()) && (this.day == other.getDay())){
-			return true;
-		}
-		else{
-			return false;
-		}
+		return((this.year == other.getYear()) && (this.month == other.getMonth()) && (this.day == other.getDay()))
 	}
+	
+	String monthName(){
+		int 
 }
