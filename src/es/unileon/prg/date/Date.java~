@@ -1,0 +1,68 @@
+package es.unileon.prg.date;
+public class Date{
+	
+	private int day;
+	private int month;
+	private int year;
+
+	public Date(int day, int month, int year){
+		this.day = day;
+		this.month = month;
+		this.year = year;
+	}
+	
+	void setYear(int year){
+		this.year = year;
+	}
+	void setMonth(int month){
+		this.month = month;
+	}
+	void setDay(int day){
+		this.day = day;
+	}
+
+	int getYear(){
+		return this.year;
+	}
+	int getMonth(){
+		return this.month;
+	}
+	int getDay(){
+		return this.day;
+	}
+	
+	boolean isSameYear(date other){
+		if(this.year == other.getYear()){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	boolean isSameMonth(date other){
+		if(this.month == other.getMonth()){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	boolean isSameDay(date other){
+		if(this.day == other.getDay()){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	boolean isSame(date other){
+		if((this.year == other.getYear()) && (this.month == other.getMonth()) && (this.day == other.getDay())){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+}
