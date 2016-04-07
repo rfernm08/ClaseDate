@@ -11,16 +11,34 @@ public class Date{
 		this.year=2016;
 	}
 
-	public Date(int day, int month, int year){
-		this.day = day;
-		this.month = month;
-		this.year = year;
+	public Date(int day, int month, int year) throws DateException{
+		StringBuffer msg = new StringBuffer();
+		if((month<1)||(month>12)){
+			msg.append("El mes "+month+" introducido no es valido.\n");
+		}
+		if((day<1)||(day>31)){
+			msg.append("El día "+day+" introducido no es valido.\n");
+		}
+		if(year<0){
+			msg.append("No se permiten años negativos.\n");
+		}
+		if(day>daysOfMonth(this.month)){
+			msg.append("Error entre el dia y el mes.\n");
+		}
+		if(msg.length()!=0){
+			throw new DateException(msg.toString());
+		}
+		else{
+			this.day = day;
+			this.month = month;
+			this.year = year;
+		}
 	}
 	
 	public Date(Date aux){
-		this.day = aux.getDay;
-		this.month = aux.getMonth;
-		this.year = aux.getYear;
+		this.day = aux.getDay();
+		this.month = aux.getMonth();
+		this.year = aux.getYear();
 	}
 	
 	void setYear(int year){
@@ -56,10 +74,10 @@ public class Date{
 	}
 
 	boolean isSame(Date other){
-		return((this.year == other.getYear()) && (this.month == other.getMonth()) && (this.day == other.getDay()))
+		return((this.year == other.getYear()) && (this.month == other.getMonth()) && (this.day == other.getDay()));
 	}
 	
-	public String monthName(){
+	public String monthName(int month){
 		String mes="";
 		switch(this.month){
 			case 1: 
@@ -133,54 +151,54 @@ public class Date{
 			return daysOfMonth;
 	}
 	
-	public String monthName(){
-		String seasson="";
+	public String seasonName(){
+		String season="";
 		switch(this.month){
 			case 1: //next
 			case 2: //next
 			case 3:
 				if(this.day<=20){
-					seasson = "Invierno";
+					season = "Invierno";
 				}
 				else{
-					seasson = "Primavera";
+					season = "Primavera";
 				}
 				break;			
 			case 4: //next
 			case 5: //next
 			case 6:
 				if(this.day<=20){
-					seasson = "Primavera";
+					season = "Primavera";
 				}
 				else{
-					seasson = "Verano";
+					season = "Verano";
 				}
 				break;
 			case 7: //next
 			case 8: //next
 			case 9:
 				if(this.day<=20){
-				 seasson = "Verano";
+				 season = "Verano";
 				}
 				else{
-					seasson = "Otoño";
+					season = "Otoño";
 				}
 				break;
 			case 10: //next
 			case 11: //next
 			case 12: //next
 				if(this.day<=20){
-				seasson = "Otoño";
+				season = "Otoño";
 				}
 				else{
-					seasson = "Invierno";
+					season = "Invierno";
 				}
 				break;
 			}
-			return seasson;
+			return season;
 		}
 		public String monthsLeft(){
-			StringBuffer months = new Stringbuffer();
+			StringBuffer months = new StringBuffer();
 			Date fecha = new Date(this);
 			for(int i=this.month;i<=12;i++){
 				fecha.setMonth(fecha.getMonth()+1);
@@ -190,5 +208,93 @@ public class Date{
 		}
 		
 		public String printDate(){
-			
+			String fecha="";
+			fecha = "La fecha es "+this.day+"/"+this.month+"/"+this.year+".";
+			return fecha;
+		}
+
+		public int daysOfMonth(int month){
+			int numberOfDays;
+			if((this.month=1)||(this.month=3)||(this.month=5)||(this.month=7)||(this.month=8)||(this.month=10)||(this.month=12)){
+				numberOfDays=31;
+			}
+			if((this.month=4)||(this.month=6)||(this.month=9)||(this.month=11)){
+				numberOfDays=30;
+			}
+			if(this.month=2){
+				numberOfDays=28;
+			}
+			return numberOfDays;
+		}
+		
+		public String datesEndMonth(){
+			StringBuffer fechas = new StringBuffer();
+			for(int i=this.day;i<daysOfMonth(int month);i++){
+				fechas.append(this.day+"/"+this.month+"/"+this.year+"\n");
+			}
+			return fechas.toString();
+		}
+		
+		public String printMonthSameDays(){
+			StringBuffer monthSameDays = new StringBuffer();
+			for(int i=0;i<12;i++){
+				if(daysOfMonth(this.month)==daysOfMonth(i)){
+				monthSameDays.append(monthName(i));
+				}
+			}
+		return monthSameDays;
+		}
+		
+		public int countDays(){
+			int days;
+			for(int i=0;i<this.month;i++){
+				days=days+daysOfMonth(i);
+			}
+			days=days+this.day;
+			return days;
+		}
+
+		public int numberAttemps(Date other){
+			double randMonth = Math.random()*12+1;
+			double randDay = Math.random()*daysOfMonth(randMonth)+1;
+			Date randDate = new Date(randDay, randMonth, other.getYear());
+			int attemps;
+			while(randDate!=other){
+				attemps++;
+			}
+		return attemps;
+		}
+	
+		public String weekDay(Date givenDate, int firstDay){
+			StringBuffer weekDay = new StringBuffer();
+			int cont=0;
+			for(int i=0;i!=givenDate.getDay();i++){
+				cont=(firstDay+i)%7;
+			}
+			switch(cont){
+				case 0:
+					weekDay.append("Domingo");
+					break;
+				case 1:
+					weekDay.append("Lunes");
+					break;
+				case 2:
+					weekDay.append("Martes");
+					break;
+				case 3:
+					weekDay.append("Miercoles");
+					break;
+				case 4:
+					weekDay.append("Jueves");
+					break;
+				case 5:
+					weekDay.append("Viernes");
+					break;
+				case 6:
+					weekDay.append("Sabado");
+					break;
+			}
+			return weekDay.toString();
+			}
+		
 }
