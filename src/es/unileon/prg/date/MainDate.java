@@ -3,7 +3,12 @@ package es.unileon.prg.date;
 public class MainDate{
 
 	public static void main(String[] args) {
-		Date date=new Date(2,4,2016);
-		System.out.println(Date.monthName());
+		try {
+			Date today = new Date(1, 4, 2017);
+			System.out.println(today);
+		} catch (DateException e) {
+			System.out.println(e.getMessage());
+		}
+		
 	}
 }

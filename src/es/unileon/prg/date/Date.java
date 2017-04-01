@@ -1,4 +1,5 @@
 package es.unileon.prg.date;
+
 public class Date{
 	
 	private int day;
@@ -12,21 +13,21 @@ public class Date{
 	}
 
 	public Date(int day, int month, int year) throws DateException{
-		StringBuffer msg = new StringBuffer();
+		StringBuffer message = new StringBuffer();
 		if((month<1)||(month>12)){
-			msg.append("El mes "+month+" introducido no es valido.\n");
+			message.append("El mes "+month+" introducido no es valido.\n");
 		}
 		if((day<1)||(day>31)){
-			msg.append("El día "+day+" introducido no es valido.\n");
+			message.append("El día "+day+" introducido no es valido.\n");
 		}
 		if(year<0){
-			msg.append("No se permiten años negativos.\n");
+			message.append("No se permiten años negativos.\n");
 		}
-		if(day>daysOfMonth(this.month)){
-			msg.append("Error entre el dia y el mes.\n");
+		if(day>this.daysOfMonth(month)){
+			message.append("Error entre el dia y el mes.\n");
 		}
-		if(msg.length()!=0){
-			throw new DateException(msg.toString());
+		if(message.length()!=0){
+			throw new DateException(message.toString());
 		}
 		else{
 			this.day = day;
@@ -41,24 +42,76 @@ public class Date{
 		this.year = aux.getYear();
 	}
 	
-	void setYear(int year){
-		this.year = year;
-	}
-	void setMonth(int month){
-		this.month = month;
-	}
-	void setDay(int day){
-		this.day = day;
+	public void setYear(int year) throws DateException{
+		if ( year < 0) {
+			throw new DateException("Los años negativos no están permitidos.\n");			
+		} 
+		else {
+			this.year = year;
+		}
 	}
 
-	int getYear(){
-		return this.year;
+	public void setMonth(int month) throws DateException{
+		if ( month <= 0) {
+			throw new DateException("Los meses negativos no estan permitidos.\n");		
+		} else {
+			if ( month > 12 ){
+				throw new DateException("Solo hay 12 meses, el mes introducido no es valido.\n");
+			} 
+			else {
+				this.month = month;
+			}
+		}
 	}
-	int getMonth(){
-		return this.month;
+	public void setDay(int day)throws DateException{
+		if(day<=0){
+			throw new DateException("Los dias negativos no están permitidos.\n");
+		}
+		else{
+			if(!isRightDay() ){
+				throw new DateException("Error en la combinacion de mes y dia.\n");
+			}
+			else{
+				this.day = day;
+			}
+		}
 	}
-	int getDay(){
-		return this.day;
+
+	public int getYear(){
+		return year;
+	}
+	public int getMonth(){
+		return month;
+	}
+	public int getDay(){
+		return day;
+	}
+	
+	public Date tomorrow(){
+		Date tomorrow = null;
+		int d, m, y;
+				
+		d = this.day;
+		m = this.month;
+		y = this.year;
+		
+		d++;
+		if ( d > this.daysOfMonth(month) ) {
+			d = 1;
+			m++;
+			if ( m > 12 ) {
+				m = 1;
+				y++;
+			}	
+		}
+		
+		try{
+			tomorrow = new Date(d, m, y);
+		} catch (DateException e){
+			System.err.println("Date.tomorrow: " + e.getMessage());
+		}
+
+		return tomorrow;
 	}
 	
 	boolean isSameYear(Date other){
@@ -200,9 +253,13 @@ public class Date{
 		public String monthsLeft(){
 			StringBuffer months = new StringBuffer();
 			Date fecha = new Date(this);
-			for(int i=this.month;i<=12;i++){
-				fecha.setMonth(fecha.getMonth()+1);
-				months.append(fecha.monthName());
+			try{
+				for(int i=this.month;i<=12;i++){
+					fecha.setMonth(i);
+					months.append(fecha.monthName(this.month)+ " ");
+				}
+			} catch (DateException e){
+				System.err.println("Date.monthsLeft: "+e.getMessage());
 			}
 			return months.toString();
 		}
@@ -214,14 +271,14 @@ public class Date{
 		}
 
 		public int daysOfMonth(int month){
-			int numberOfDays;
-			if((this.month=1)||(this.month=3)||(this.month=5)||(this.month=7)||(this.month=8)||(this.month=10)||(this.month=12)){
+			int numberOfDays=0;
+			if((month==1)||(month==3)||(month==5)||(month==7)||(month==8)||(month==10)||(month==12)){
 				numberOfDays=31;
 			}
-			if((this.month=4)||(this.month=6)||(this.month=9)||(this.month=11)){
+			if((month==4)||(month==6)||(month==9)||(month==11)){
 				numberOfDays=30;
 			}
-			if(this.month=2){
+			if(month==2){
 				numberOfDays=28;
 			}
 			return numberOfDays;
@@ -229,13 +286,13 @@ public class Date{
 		
 		public String datesEndMonth(){
 			StringBuffer fechas = new StringBuffer();
-			for(int i=this.day;i<daysOfMonth(int month);i++){
+			for(int i=this.day;i<daysOfMonth(month);i++){
 				fechas.append(this.day+"/"+this.month+"/"+this.year+"\n");
 			}
 			return fechas.toString();
 		}
 		
-		public String printMonthSameDays(){
+		public StringBuffer printMonthSameDays(){
 			StringBuffer monthSameDays = new StringBuffer();
 			for(int i=0;i<12;i++){
 				if(daysOfMonth(this.month)==daysOfMonth(i)){
@@ -246,7 +303,7 @@ public class Date{
 		}
 		
 		public int countDays(){
-			int days;
+			int days=0;
 			for(int i=0;i<this.month;i++){
 				days=days+daysOfMonth(i);
 			}
@@ -256,9 +313,14 @@ public class Date{
 
 		public int numberAttemps(Date other){
 			double randMonth = Math.random()*12+1;
-			double randDay = Math.random()*daysOfMonth(randMonth)+1;
-			Date randDate = new Date(randDay, randMonth, other.getYear());
-			int attemps;
+			double randDay = Math.random()*daysOfMonth((int)randMonth)+1;
+			Date randDate = new Date();
+			try{
+				randDate = new Date((int)randDay, (int)randMonth, other.getYear());
+			} catch (DateException e){
+				System.err.println("randDate: " + e.getMessage());
+			}
+			int attemps=0;
 			while(randDate!=other){
 				attemps++;
 			}

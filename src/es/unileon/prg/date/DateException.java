@@ -1,7 +1,9 @@
 package es.unileon.prg.date;
 
-public class DateException extends Exception{	
-	public String DateExcepcion(String msg){
-        	super(msg);
+public class DateException extends Exception {
+	
+	public DateException(String message){
+		super(message);
 	}
+
 }
